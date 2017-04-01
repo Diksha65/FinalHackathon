@@ -1,8 +1,8 @@
 package com.example.soubhagya.finalhackathon;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -51,6 +51,7 @@ public class SignInActivity extends AppCompatActivity {
                                         .build(),
                                 RC_SIGNIN
                         );
+
                     }
                 });
             }
@@ -66,7 +67,8 @@ public class SignInActivity extends AppCompatActivity {
                 // Successfully signed in
                 if (resultCode == RESULT_OK) {
                     notifyUser("Next Activity");
-                    //startActivity(new Intent(SignInActivity.this, DetailsEntryActivity.class));
+                    //Starts Slider
+                    startIntroSLider();
                     finish();
                     return;
                 } else {
@@ -92,5 +94,10 @@ public class SignInActivity extends AppCompatActivity {
 
     public void notifyUser(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void startIntroSLider(){
+        Intent intent = new Intent(SignInActivity.this, IntroSliderActivity.class);
+        startActivity(intent);
     }
 }
