@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
+
 public class SignInActivity extends AppCompatActivity {
 
     private static final int RC_SIGNIN = 123;
