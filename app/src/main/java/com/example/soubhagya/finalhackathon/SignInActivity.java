@@ -14,9 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
-import static android.R.attr.data;
-
-public class MainActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
 
     private static final int RC_SIGNIN = 123;
 
@@ -27,14 +25,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_in);
 
         getStartedButton = (Button) findViewById(R.id.button_get_started);
 
             auth = FirebaseAuth.getInstance();
             if (auth.getCurrentUser() != null) {
                 notifyUser("Already signed in!");
-                //startActivity(new Intent(MainActivity.this, DetailsEntryActivity.class));
+                //startActivity(new Intent(SignInActivity.this, DetailsEntryActivity.class));
                 finish();
             }
             else {
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 // Successfully signed in
                 if (resultCode == RESULT_OK) {
                     notifyUser("Next Activity");
-                    //startActivity(new Intent(MainActivity.this, DetailsEntryActivity.class));
+                    //startActivity(new Intent(SignInActivity.this, DetailsEntryActivity.class));
                     finish();
                     return;
                 } else {
