@@ -137,6 +137,7 @@ public class AddContactsActivity extends AppCompatActivity {
 
     }
 
+
     public void updateUserNode(final String trustedContactNum){
         dataStash.fireBase
                 .child("USERS")
