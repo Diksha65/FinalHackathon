@@ -33,7 +33,7 @@ public class SignInActivity extends AppCompatActivity {
             auth = FirebaseAuth.getInstance();
             if (auth.getCurrentUser() != null) {
                 notifyUser("Already signed in!");
-                //startActivity(new Intent(SignInActivity.this, DetailsEntryActivity.class));
+                startActivity(new Intent(SignInActivity.this, PhoneActivity.class));
                 finish();
             }
             else {

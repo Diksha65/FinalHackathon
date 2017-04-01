@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 //Singleton
 public class DataStash {
 
+    public DatabaseReference fireBase;
+
     //************************************************************  EVENT LISTENER
     private Map<
             UUID,
@@ -86,7 +88,7 @@ public class DataStash {
 
     //************************************************************  SINGLETON, INITIALIZATION
     private DataStash(){
-        DatabaseReference fireBase = FirebaseDatabase.getInstance().getReference();
+        fireBase = FirebaseDatabase.getInstance().getReference();
         valueEventListeners = new ConcurrentHashMap<>();
         childEventListeners = new ConcurrentHashMap<>();
     }
