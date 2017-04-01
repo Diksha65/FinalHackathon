@@ -3,6 +3,8 @@ package com.example.soubhagya.finalhackathon;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -18,15 +20,19 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RC_SIGNIN = 123;
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth auth;
+    
+    private Button getStartedButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-            mAuth = FirebaseAuth.getInstance();
-            if (mAuth.getCurrentUser() != null) {
+        getStartedButton = (Button) findViewById(R.id.button_get_started);
+
+            auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() != null) {
                 notifyUser("Already signed in!");
                 //startActivity(new Intent(MainActivity.this, DetailsEntryActivity.class));
                 finish();
@@ -34,16 +40,21 @@ public class MainActivity extends AppCompatActivity {
             else {
                 notifyUser("Please sign in!");
 
-                startActivityForResult(
-                        AuthUI.getInstance()
-                                .createSignInIntentBuilder()
-                                .setProviders(
-                                        Arrays.asList(
-                                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-                                .setIsSmartLockEnabled(false)
-                                .build(),
-                        RC_SIGNIN
-                );
+                getStartedButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivityForResult(
+                                AuthUI.getInstance()
+                                        .createSignInIntentBuilder()
+                                        .setProviders(
+                                                Arrays.asList(
+                                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                        .setIsSmartLockEnabled(false)
+                                        .build(),
+                                RC_SIGNIN
+                        );
+                    }
+                });
             }
         }
 
