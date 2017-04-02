@@ -34,7 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
  *
  */
 
-public abstract class DistressMapActivity extends AppCompatActivity {
+public class DistressMapActivity extends AppCompatActivity {
 
     protected static final String TAG = "DistressMapActivity";
 
@@ -104,7 +104,7 @@ public abstract class DistressMapActivity extends AppCompatActivity {
                                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                                         try{
                                             status.startResolutionForResult(
-                                                    getPresentActivity(),
+                                                    DistressMapActivity.this,
                                                     REQUEST_CHECK_SETTINGS
                                             );
                                         } catch (IntentSender.SendIntentException e) {
@@ -112,8 +112,8 @@ public abstract class DistressMapActivity extends AppCompatActivity {
                                         }
                                         break;
                                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                        Toast.makeText(getPresentActivity(),
-                                                "IRREVOCABLY FUCKED, RESTART", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(DistressMapActivity.this, "IRREVOCABLY FUCKED, RESTART", Toast.LENGTH_SHORT).show();
+
                                 }
                             }
                         }
@@ -128,25 +128,25 @@ public abstract class DistressMapActivity extends AppCompatActivity {
                         new GoogleApiClient.OnConnectionFailedListener() {
                             @Override
                             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                                Toast.makeText(Ma)
+                                Toast.makeText(DistressMapActivity.this, "ConnFail", Toast.LENGTH_SHORT).show();
                             }
                         })
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        if(LocationUtils.checkPermissions(getPresentActivity())) {
+                        if(LocationUtils.checkPermissions(DistressMapActivity.this)) {
                             locationRequest = createLocationRequest();
                             checkedIssueRequest();
                         }
                         else{
-                            LocationUtils.requestPermissions(getPresentActivity(),
+                            LocationUtils.requestPermissions(DistressMapActivity.this,
                                     REQUEST_PERMISSIONS);
                         }
                     }
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        Toast.makeText(getPresentActivity(), "SUSPENDED", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DistressMapActivity.this, "SUSPENDED", Toast.LENGTH_SHORT).show();
                         googleApiClient.connect();
                     }
                 })
