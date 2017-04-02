@@ -67,7 +67,11 @@ public class AddContactsActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(AddContactsActivity.this, MapsActivity.class));
+
+                Intent i = AddCustomisedMessageActivity.newIntent(AddContactsActivity.this, userPhoneNum);
+                startActivity(i);
+                finish();
+
             }
         });
     }
