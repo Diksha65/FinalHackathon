@@ -15,17 +15,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".IntroSliderActivity"/>
-        <activity android:name=".PhoneActivity"/>
-        <activity android:name=".SignInActivity"/>
-        <activity android:name=".AddContactsActivity"/>
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".IntroSliderActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".PhoneActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".SignInActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".AddContactsActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".SplashScreenActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
