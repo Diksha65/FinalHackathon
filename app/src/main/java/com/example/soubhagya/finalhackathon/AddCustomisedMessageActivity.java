@@ -73,11 +73,11 @@ public class AddCustomisedMessageActivity extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                /*
-                                Intent i = AddCustomisedMessageActivity.newIntent(AddPinActivity.this, userPhoneNumber);
+
+                                Intent i = AddPinActivity.newIntent(AddCustomisedMessageActivity.this, userPhoneNumber);
                                 startActivity(i);
                                 finish();
-                                 */
+
                             }
                         });
             }
