@@ -11,10 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".IntroSliderActivity"></activity>
-        <activity android:name=".PhoneActivity"></activity>
+
+        <activity android:name=".IntroSliderActivity"/>
+        <activity android:name=".PhoneActivity"/>
+        <activity android:name=".SignInActivity"/>
         <activity android:name=".AddContactsActivity"/>
-        <activity android:name=".SignInActivity">
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

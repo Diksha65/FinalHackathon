@@ -4,6 +4,11 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
+
+        /**
+         *  TODO check this multiDexEnabled true
+         *
+         */
         multiDexEnabled true
         applicationId "com.example.soubhagya.finalhackathon"
         minSdkVersion 16
