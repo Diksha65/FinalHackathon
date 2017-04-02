@@ -22,7 +22,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class LocationUtils {
 
-
     private static DataStash dataStash = DataStash.getDataStash();
 
     private static final String[] mRequiredPermissions = new String[]{
