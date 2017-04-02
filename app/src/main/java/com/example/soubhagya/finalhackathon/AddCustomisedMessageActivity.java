@@ -41,7 +41,8 @@ public class AddCustomisedMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customised_message);
 
-        userPhoneNumber = getIntent().getStringExtra(EXTRA_PHONE_NUM);
+        userPhoneNumber = getSharedPreferences(dataStash.sharedPreferences, MODE_PRIVATE)
+                .getString("PHONE_NUMBER", "");
 
         editMessage = (EditText)findViewById(R.id.editText);
         editMessage.addTextChangedListener(new TextWatcher() {

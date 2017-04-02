@@ -127,9 +127,6 @@ public class AddContactsActivity extends AppCompatActivity {
                     notifyUser(trustedContactNum);
 
                     updateUserNode(trustedContactNum);
-
-                    //updateTrustedContactNode(trustedContactNum);
-
                 }
                 phones.close();
             }

@@ -10,9 +10,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.soubhagya.finalhackathon.utils.LocationUtils;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -25,6 +30,10 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.Arrays;
 
 
 /**
@@ -38,18 +47,41 @@ public class DistressMapActivity extends AppCompatActivity {
 
     protected static final String TAG = "DistressMapActivity";
 
-    protected static final int REQUEST_PERMISSIONS    = 0;
+    protected static final int REQUEST_PERMISSIONS = 0;
     protected static final int REQUEST_CHECK_SETTINGS = 1;
 
     protected GoogleApiClient googleApiClient;
     protected LocationRequest locationRequest;
-
+    protected DataStash dataStash = DataStash.getDataStash();
     protected GoogleMap map;
+
+    private static final int RC_SIGNIN = 123;
+
+    public void notifyUser(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        googleApiClient = createGoogleApiClient();
+
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() == null) {
+            notifyUser("Please sign in!");
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setProviders(
+                                    Arrays.asList(
+                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                            .setIsSmartLockEnabled(false)
+                            .build(),
+                    RC_SIGNIN
+            );
+        } else
+            googleApiClient = createGoogleApiClient();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -61,15 +93,15 @@ public class DistressMapActivity extends AppCompatActivity {
     }
 
 
-    protected LocationRequest createLocationRequest(){
+    protected LocationRequest createLocationRequest() {
         return LocationRequest
                 .create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(1500);//ms
+                .setInterval(1500);
 
     }
 
-    protected void issueLocationRequest(LocationRequest locationRequest){
+    protected void issueLocationRequest(LocationRequest locationRequest) {
         try {
             LocationServices
                     .FusedLocationApi
@@ -79,7 +111,10 @@ public class DistressMapActivity extends AppCompatActivity {
                             new LocationListener() {
                                 @Override
                                 public void onLocationChanged(Location location) {
-
+                                    dataStash.fireBase
+                                            .child("LOCATIONS")
+                                            .child(auth.getCurrentUser().getUid())
+                                            .setValue(LocationUtils.getGeoLocation(location));
                                 }
                             });
         } catch (SecurityException se) {
@@ -87,7 +122,7 @@ public class DistressMapActivity extends AppCompatActivity {
         }
     }
 
-    protected void checkedIssueRequest(){
+    protected void checkedIssueRequest() {
         LocationUtils.requestSettings(locationRequest, googleApiClient)
                 .setResultCallback(
                         new ResultCallback<LocationSettingsResult>() {
@@ -95,14 +130,14 @@ public class DistressMapActivity extends AppCompatActivity {
                             public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
                                 final Status status = locationSettingsResult.getStatus();
 
-                                switch (status.getStatusCode()){
+                                switch (status.getStatusCode()) {
                                     case LocationSettingsStatusCodes.SUCCESS:
                                         //Actual Location Request Call
                                         issueLocationRequest(locationRequest);
                                         break;
 
                                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                        try{
+                                        try {
                                             status.startResolutionForResult(
                                                     DistressMapActivity.this,
                                                     REQUEST_CHECK_SETTINGS
@@ -134,11 +169,10 @@ public class DistressMapActivity extends AppCompatActivity {
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        if(LocationUtils.checkPermissions(DistressMapActivity.this)) {
+                        if (LocationUtils.checkPermissions(DistressMapActivity.this)) {
                             locationRequest = createLocationRequest();
                             checkedIssueRequest();
-                        }
-                        else{
+                        } else {
                             LocationUtils.requestPermissions(DistressMapActivity.this,
                                     REQUEST_PERMISSIONS);
                         }
@@ -165,35 +199,60 @@ public class DistressMapActivity extends AppCompatActivity {
                     }
                     if (permissionGranted) {
                         checkedIssueRequest();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getApplicationContext(),
                                 "Please grant all permissions!",
                                 Toast.LENGTH_SHORT)
                                 .show();
                     }
-                }
-                else {
+                } else {
                     Log.d("PERMISSIONS", "GrantResults length is zero!");
                 }
             }
+
+
+
             break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 if (resultCode == RESULT_OK)
                     issueLocationRequest(locationRequest);
                 break;
+            case RC_SIGNIN:
+                IdpResponse response = IdpResponse.fromResultIntent(data);
+                // Successfully signed in
+                if (resultCode == RESULT_OK) {
+                    googleApiClient = createGoogleApiClient();
+                    return;
+                } else {
+                    // Sign in failed
+                    if (response == null) {
+                        // User pressed back button
+                        notifyUser("Sign in cancelled!");
+                        return;
+                    }
+
+                    if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                        notifyUser("Network error!");
+                        return;
+                    }
+
+                    if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                        notifyUser("Unknown error!");
+                        return;
+                    }
+                }
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-
 }

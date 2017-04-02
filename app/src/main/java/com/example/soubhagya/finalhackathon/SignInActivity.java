@@ -14,7 +14,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
-
+/**
+ * ToDo: get phone.no from shared preferences after checking auth
+ */
 public class SignInActivity extends AppCompatActivity {
 
     private static final int RC_SIGNIN = 123;
@@ -69,7 +71,7 @@ public class SignInActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     notifyUser("Next Activity");
                     //Starts Slider
-                    startIntroSLider();
+                    startIntroSlider();
                     finish();
                     return;
                 } else {
@@ -97,7 +99,7 @@ public class SignInActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public void startIntroSLider(){
+    public void startIntroSlider(){
         Intent intent = new Intent(SignInActivity.this, IntroSliderActivity.class);
         startActivity(intent);
     }
