@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataStash {
 
     public DatabaseReference fireBase;
+    public static final String sharedPreferences = "SHARED_PREFERENCES";
 
     //************************************************************  EVENT LISTENER
     private Map<
