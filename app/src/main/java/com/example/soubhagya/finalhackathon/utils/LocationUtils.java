@@ -1,4 +1,4 @@
-package com.example.soubhagya.finalhackathon;
+package com.example.soubhagya.finalhackathon.utils;
 
 import android.Manifest;
 import android.app.Activity;
@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.content.pm.PackageManager;
 
+import com.example.soubhagya.finalhackathon.DataStash;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;

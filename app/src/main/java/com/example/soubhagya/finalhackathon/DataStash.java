@@ -5,6 +5,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,6 +20,7 @@ public class DataStash {
 
     public DatabaseReference fireBase;
     public static final String sharedPreferences = "SHARED_PREFERENCES";
+    public Map<String, LatLng> dependantLocations = new ConcurrentHashMap<>();
 
     //************************************************************  EVENT LISTENER
     private Map<
